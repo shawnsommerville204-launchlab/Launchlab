@@ -1,101 +1,322 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
-type ReactorSequenceProps = {
-  launchStatus: string;
-  setLaunchStatus: (status: string) => void;
-};
 
-const steps = [
-  "⚡ Reactor initializing...",
-  "🦈 Investor Council connecting...",
-  "❤️ Customer Council analyzing...",
-  "⚙️ Architect designing solution...",
-  "📣 Growth Council building strategy...",
-  "😈 Challenger stress testing...",
-  "🚀 Launch Director preparing report...",
+const councilScan = [
+  {
+    icon: "🦈",
+    name: "VANTAGE",
+    task: "Analyzing market opportunity..."
+  },
+  {
+    icon: "❤️",
+    name: "PULSE",
+    task: "Mapping customer demand..."
+  },
+  {
+    icon: "⚙️",
+    name: "FORGE",
+    task: "Testing execution strategy..."
+  },
+  {
+    icon: "📈",
+    name: "ASCEND",
+    task: "Calculating growth potential..."
+  }
 ];
 
-export default function ReactorSequence({
-  launchStatus,
-  setLaunchStatus,
-}: ReactorSequenceProps) {
 
-  const [currentStep, setCurrentStep] = useState(0);
+export default function ReactorSequence() {
+
+  const [progress, setProgress] = useState(0);
+  const [activeScan, setActiveScan] = useState(0);
 
 
   useEffect(() => {
 
-    if (launchStatus !== "analyzing") {
-      setCurrentStep(0);
-      return;
-    }
+    const timer = setInterval(() => {
 
-const timer = setInterval(() => {
+      setProgress((current) => {
 
-  setCurrentStep((previous) => {
+        if(current >= 100){
+          clearInterval(timer);
+          return 100;
+        }
 
-    if (previous < steps.length - 1) {
-      return previous + 1;
-    }
+        return current + 2;
 
-    setTimeout(() => {
-      setLaunchStatus("complete");
-    }, 1500);
+      });
 
-    return previous;
-
-  });
-
-}, 1200);
+    },100);
 
 
-    return () => clearInterval(timer);
+    const scanner = setInterval(() => {
 
-  }, [launchStatus]);
+      setActiveScan((current)=>{
+
+        if(current >= councilScan.length - 1){
+          clearInterval(scanner);
+          return current;
+        }
+
+        return current + 1;
+
+      });
+
+    },2500);
 
 
-  if (launchStatus !== "analyzing") {
-    return null;
-  }
+    return () => {
+      clearInterval(timer);
+      clearInterval(scanner);
+    };
+
+
+  },[]);
+
 
 
   return (
 
-    <section className="px-6 py-20">
+    <motion.section
 
-      <div className="max-w-3xl mx-auto rounded-3xl border border-cyan-500/30 bg-zinc-900 p-10 shadow-2xl">
+      initial={{
+        opacity:0,
+        scale:.8
+      }}
 
-        <h2 className="text-4xl font-bold text-center text-cyan-400">
-          ⚡ MISSION CONTROL
-        </h2>
+      animate={{
+        opacity:1,
+        scale:1
+      }}
+
+      className="
+        min-h-screen
+        flex
+        flex-col
+        items-center
+        justify-center
+        bg-black
+        text-white
+        p-8
+      "
+
+    >
 
 
-        <p className="text-center mt-4 text-zinc-400">
-          Reactor analysis in progress...
-        </p>
+      <motion.div
+
+        animate={{
+          boxShadow:[
+            "0 0 20px cyan",
+            "0 0 80px cyan",
+            "0 0 20px cyan"
+          ]
+        }}
+
+        transition={{
+          duration:2,
+          repeat:Infinity
+        }}
+
+        className="
+          w-48
+          h-48
+          rounded-full
+          border-4
+          border-cyan-400
+          flex
+          items-center
+          justify-center
+          text-6xl
+        "
+
+      >
+
+        ⚡
+
+      </motion.div>
 
 
-        <div className="mt-8 space-y-5 text-lg">
 
-          {steps.slice(0, currentStep + 1).map((step, index) => (
+      <h1
+        className="
+          mt-10
+          text-4xl
+          font-bold
+          text-cyan-400
+          tracking-widest
+        "
+      >
 
-            <p 
-              key={index}
-              className="text-white"
-            >
-              {step}
-            </p>
+        REACTOR ANALYSIS
 
-          ))}
+      </h1>
+
+
+
+      <p className="
+        mt-4
+        text-gray-300
+      ">
+
+        LaunchLab Council is evaluating your idea
+
+      </p>
+
+
+
+
+      <div
+        className="
+          mt-10
+          w-full
+          max-w-xl
+        "
+      >
+
+        <div
+          className="
+            h-4
+            bg-gray-800
+            rounded-full
+            overflow-hidden
+          "
+        >
+
+          <motion.div
+
+            animate={{
+              width:`${progress}%`
+            }}
+
+            className="
+              h-full
+              bg-cyan-400
+            "
+
+          />
+
+        </div>
+
+
+        <div className="
+          mt-3
+          text-center
+          text-cyan-300
+          font-bold
+        ">
+
+          {progress}% COMPLETE
 
         </div>
 
 
       </div>
 
-    </section>
+
+
+
+      <div className="mt-10 space-y-5">
+
+
+        {councilScan.map((member,index)=>(
+
+          <motion.div
+
+            key={member.name}
+
+            initial={{
+              opacity:0,
+              x:-40
+            }}
+
+            animate={{
+              opacity:index <= activeScan ? 1 : .25,
+              x:0
+            }}
+
+            className="
+              flex
+              items-center
+              gap-4
+              text-lg
+            "
+
+          >
+
+            <span>
+              {member.icon}
+            </span>
+
+            <div>
+
+              <div className="
+                text-cyan-300
+                font-bold
+              ">
+
+                {member.name}
+
+              </div>
+
+              <div className="
+                text-sm
+                text-gray-400
+              ">
+
+                {member.task}
+
+              </div>
+
+            </div>
+
+
+          </motion.div>
+
+
+        ))}
+
+
+      </div>
+
+
+
+      {progress === 100 && (
+
+        <motion.div
+
+          initial={{
+            opacity:0,
+            y:30
+          }}
+
+          animate={{
+            opacity:1,
+            y:0
+          }}
+
+          className="
+            mt-12
+            text-3xl
+            text-green-400
+            font-bold
+          "
+
+        >
+
+          🚀 LAUNCH SCORE READY
+
+        </motion.div>
+
+      )}
+
+
+
+    </motion.section>
 
   );
+
 }

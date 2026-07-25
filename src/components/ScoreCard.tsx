@@ -1,87 +1,239 @@
 "use client";
 
-type ScoreCardProps = {
-  launchStatus: string;
-  score: number;
-  status: string;
-  strengths: string[];
-  nextStep: string;
-};
+import { motion } from "framer-motion";
 
-export default function ScoreCard({
-  launchStatus,
-  score,
-  status,
-  strengths,
-  nextStep,
-}: ScoreCardProps) {
 
-  if (launchStatus !== "complete") {
-    return null;
-  }
+const scores = [
+  {
+    icon: "🦈",
+    name: "VANTAGE",
+    score: 92,
+    category: "Market Strategy",
+  },
+  {
+    icon: "❤️",
+    name: "PULSE",
+    score: 88,
+    category: "Customer Fit",
+  },
+  {
+    icon: "⚙️",
+    name: "FORGE",
+    score: 91,
+    category: "Execution",
+  },
+  {
+    icon: "📈",
+    name: "ASCEND",
+    score: 89,
+    category: "Growth Potential",
+  },
+];
+
+
+export default function ScoreCard() {
+
+  const totalScore = Math.round(
+    scores.reduce((sum, item)=>sum + item.score,0)
+    / scores.length
+  );
 
 
   return (
-    <section className="px-6 py-20">
 
-      <div className="max-w-3xl mx-auto rounded-3xl border border-cyan-500/30 bg-zinc-900 p-10 shadow-2xl">
+    <motion.section
 
-        <h2 className="text-4xl font-bold text-center text-cyan-400">
-          🚀 LAUNCH REPORT GENERATED
-        </h2>
+      initial={{
+        opacity:0,
+        scale:.8
+      }}
 
+      animate={{
+        opacity:1,
+        scale:1
+      }}
 
-        <div className="mt-10 text-center">
+      transition={{
+        duration:1
+      }}
 
-          <p className="text-zinc-400">
-            Launch Potential
-          </p>
+      className="
+        min-h-screen
+        flex
+        flex-col
+        items-center
+        justify-center
+        bg-black
+        text-white
+        p-8
+      "
 
-          <p className="text-7xl font-bold text-white mt-2">
-            {score}
-          </p>
+    >
 
-          <p className="text-xl text-cyan-300 mt-3">
-            {status}
-          </p>
-
-        </div>
-
-
-        <div className="mt-10">
-
-          <h3 className="text-2xl font-bold text-white">
-            Strengths
-          </h3>
-
-          <ul className="mt-4 space-y-3 text-zinc-300">
-
-            {strengths.map((strength, index) => (
-              <li key={index}>
-                ✅ {strength}
-              </li>
-            ))}
-
-          </ul>
-
-        </div>
+      <h1
+        className="
+          text-4xl
+          text-cyan-400
+          font-bold
+          tracking-widest
+        "
+      >
+        COUNCIL VERDICT
+      </h1>
 
 
-        <div className="mt-10 border-t border-zinc-700 pt-6">
 
-          <h3 className="text-2xl font-bold text-white">
-            Next Mission
-          </h3>
+      <div
+        className="
+          mt-10
+          grid
+          md:grid-cols-2
+          gap-6
+          max-w-4xl
+          w-full
+        "
+      >
 
-          <p className="mt-3 text-zinc-300">
-            {nextStep}
-          </p>
+        {scores.map((member,index)=>(
 
-        </div>
+          <motion.div
 
+            key={member.name}
+
+            initial={{
+              opacity:0,
+              x:-30
+            }}
+
+            animate={{
+              opacity:1,
+              x:0
+            }}
+
+            transition={{
+              delay:index*.3
+            }}
+
+            className="
+              p-6
+              rounded-xl
+              border
+              border-cyan-400/30
+              bg-black/70
+              shadow-[0_0_25px_rgba(0,255,255,.2)]
+            "
+
+          >
+
+            <div className="text-3xl">
+              {member.icon}
+            </div>
+
+
+            <h2
+              className="
+                mt-3
+                text-xl
+                text-cyan-300
+                font-bold
+              "
+            >
+              {member.name}
+            </h2>
+
+
+            <p className="text-gray-400">
+              {member.category}
+            </p>
+
+
+            <div
+              className="
+                mt-4
+                text-3xl
+                font-bold
+                text-green-400
+              "
+            >
+              {member.score}%
+            </div>
+
+
+          </motion.div>
+
+        ))}
 
       </div>
 
-    </section>
+
+
+
+      <motion.div
+
+        initial={{
+          opacity:0,
+          y:50
+        }}
+
+        animate={{
+          opacity:1,
+          y:0
+        }}
+
+        transition={{
+          delay:1.5
+        }}
+
+        className="
+          mt-12
+          text-center
+        "
+
+      >
+
+        <p
+          className="
+            text-gray-400
+            tracking-widest
+          "
+        >
+          FINAL LAUNCH SCORE
+        </p>
+
+
+        <div
+          className="
+            text-7xl
+            font-bold
+            text-cyan-400
+            mt-4
+          "
+        >
+
+          {totalScore}
+
+        </div>
+
+
+        <p
+          className="
+            mt-6
+            text-green-400
+            text-xl
+            font-bold
+          "
+        >
+
+          🚀 PROTOTYPE RECOMMENDED
+
+        </p>
+
+
+      </motion.div>
+
+
+    </motion.section>
+
   );
+
 }

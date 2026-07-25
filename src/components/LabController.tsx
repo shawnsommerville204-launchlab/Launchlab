@@ -2,20 +2,25 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Orbit from "./Orbit";
+
 import BootSequence from "./BootSequence";
 import ReactorCore from "./ReactorCore";
+import ReactorSequence from "./ReactorSequence";
 import Council from "./Council";
+import Orbit from "./Orbit";
 import IdeaChamber from "./IdeaChamber";
 import LabHUB from "./LabHUB";
 import Labscene from "./Labscene";
-
+import ScoreCard from "./ScoreCard";
+import LabAudio from "./LabAudio";
 
 type LabStage =
-  | "boot"
-  | "reactor"
-  | "council"
-  | "mission";
+ | "boot"
+ | "reactor"
+ | "analysis"
+ | "council"
+ | "score"
+ | "mission";
 
 
 export default function LabController() {
@@ -29,30 +34,39 @@ export default function LabController() {
 
 
     setTimeout(() => {
-      setStage("council");
+      setStage("analysis");
     }, 3500);
 
 
     setTimeout(() => {
-      setStage("mission");
-    }, 7500);
+      setStage("council");
+    }, 8500);
+
+
+    setTimeout(() => {
+      setStage("score");
+    }, 12000);
 
   }
 
 
+
   return (
 
-    <main className="
-      min-h-screen
-      bg-black
-      text-white
-      overflow-hidden
-    ">
+    <main
+      className="
+        min-h-screen
+        bg-black
+        text-white
+        overflow-hidden
+      "
+    >
+<LabAudio />
 
       <AnimatePresence mode="wait">
 
 
-        {/* BOOT */}
+        {/* BOOT SEQUENCE */}
 
         {stage === "boot" && (
 
@@ -67,6 +81,10 @@ export default function LabController() {
             exit={{
               opacity:0,
               scale:1.2
+            }}
+
+            transition={{
+              duration:1
             }}
 
           >
@@ -99,7 +117,9 @@ export default function LabController() {
                 text-cyan-300
                 font-bold
                 tracking-widest
-                shadow-[0_0_35px_rgba(0,255,255,.7)]
+                bg-black/80
+                shadow-[0_0_40px_rgba(0,255,255,.7)]
+                z-50
               "
 
             >
@@ -115,7 +135,8 @@ export default function LabController() {
 
 
 
-        {/* REACTOR */}
+
+        {/* REACTOR ACTIVATION */}
 
         {stage === "reactor" && (
 
@@ -148,7 +169,11 @@ export default function LabController() {
               <motion.h1
 
                 animate={{
-                  opacity:[0,1,0]
+                  opacity:[
+                    .3,
+                    1,
+                    .3
+                  ]
                 }}
 
                 transition={{
@@ -158,8 +183,8 @@ export default function LabController() {
 
                 className="
                   mt-8
+                  text-4xl
                   text-cyan-400
-                  text-3xl
                   font-bold
                   tracking-widest
                 "
@@ -181,13 +206,15 @@ export default function LabController() {
 
 
 
-        {/* COUNCIL */}
 
-        {stage === "council" && (
+
+        {/* AI ANALYSIS */}
+
+        {stage === "analysis" && (
 
           <motion.div
 
-            key="council"
+            key="analysis"
 
             initial={{
               opacity:0
@@ -199,7 +226,7 @@ export default function LabController() {
 
           >
 
-            <Council />
+            <ReactorSequence />
 
           </motion.div>
 
@@ -209,13 +236,14 @@ export default function LabController() {
 
 
 
-        {/* MISSION CONTROL */}
 
-        {stage === "mission" && (
+        {/* COUNCIL AWAKENING */}
+
+        {stage === "council" && (
 
           <motion.div
 
-            key="mission"
+            key="council"
 
             initial={{
               opacity:0,
@@ -227,21 +255,62 @@ export default function LabController() {
               y:0
             }}
 
-            className="
-              min-h-screen
-            "
+          >
+
+            <Orbit />
+
+            <Council />
+
+          </motion.div>
+
+        )}
+
+
+
+
+
+{stage === "score" && (
+
+  <ScoreCard />
+
+)}
+
+        {/* MAIN LAB */}
+
+        {stage === "mission" && (
+
+          <motion.div
+
+            key="mission"
+
+            initial={{
+              opacity:0
+            }}
+
+            animate={{
+              opacity:1
+            }}
+
+            transition={{
+              duration:1
+            }}
 
           >
 
             <Labscene>
 
+
               <LabHUB />
+
 
               <Orbit />
 
+
               <IdeaChamber />
 
+
               <Council />
+
 
             </Labscene>
 
@@ -251,8 +320,8 @@ export default function LabController() {
         )}
 
 
-
       </AnimatePresence>
+
 
     </main>
 
