@@ -3,49 +3,49 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-import BootSequence from "./BootSequence";
-import ReactorCore from "./ReactorCore";
-import ReactorSequence from "./ReactorSequence";
-import Council from "./Council";
+import LabTransition from "./LabTransition";
 import Orbit from "./Orbit";
 import IdeaChamber from "./IdeaChamber";
-import LabHUB from "./LabHUB";
-import Labscene from "./Labscene";
+import ReactorSequence from "./ReactorSequence";
+import ReactorCore from "./ReactorCore";
+import Council from "./Council";
 import ScoreCard from "./ScoreCard";
-import LabAudio from "./LabAudio";
+import BootSequence from "./BootSequence";
+
 
 type LabStage =
- | "boot"
- | "reactor"
- | "analysis"
- | "council"
- | "score"
- | "mission";
+  | "boot"
+  | "reactor"
+  | "transition"
+  | "analysis"
+  | "council"
+  | "idea"
+  | "score";
 
 
 export default function LabController() {
 
+
   const [stage, setStage] = useState<LabStage>("boot");
 
-
-  function startLaunchLab() {
-
-    setStage("reactor");
+  const [nextStage, setNextStage] =
+    useState<LabStage>("reactor");
 
 
-    setTimeout(() => {
-      setStage("analysis");
-    }, 3500);
+
+  function moveTo(stageName: LabStage) {
+
+    setNextStage(stageName);
+
+    setStage("transition");
+
+  }
 
 
-    setTimeout(() => {
-      setStage("council");
-    }, 8500);
 
+  function startLab() {
 
-    setTimeout(() => {
-      setStage("score");
-    }, 12000);
+    moveTo("reactor");
 
   }
 
@@ -61,12 +61,13 @@ export default function LabController() {
         overflow-hidden
       "
     >
-<LabAudio />
+
 
       <AnimatePresence mode="wait">
 
 
-        {/* BOOT SEQUENCE */}
+
+        {/* BOOT SCREEN */}
 
         {stage === "boot" && (
 
@@ -75,6 +76,10 @@ export default function LabController() {
             key="boot"
 
             initial={{
+              opacity:0
+            }}
+
+            animate={{
               opacity:1
             }}
 
@@ -83,26 +88,18 @@ export default function LabController() {
               scale:1.2
             }}
 
-            transition={{
-              duration:1
-            }}
+            className="
+              min-h-screen
+            "
 
           >
 
             <BootSequence />
 
 
-            <motion.button
+            <button
 
-              onClick={startLaunchLab}
-
-              whileHover={{
-                scale:1.08
-              }}
-
-              whileTap={{
-                scale:.95
-              }}
+              onClick={startLab}
 
               className="
                 fixed
@@ -117,16 +114,15 @@ export default function LabController() {
                 text-cyan-300
                 font-bold
                 tracking-widest
-                bg-black/80
+                bg-black
                 shadow-[0_0_40px_rgba(0,255,255,.7)]
-                z-50
               "
 
             >
 
               ENTER LAUNCHLAB ⚡
 
-            </motion.button>
+            </button>
 
 
           </motion.div>
@@ -136,7 +132,50 @@ export default function LabController() {
 
 
 
-        {/* REACTOR ACTIVATION */}
+
+
+
+        {/* TRANSITION */}
+
+        {stage === "transition" && (
+
+          <LabTransition
+
+            message={
+              nextStage === "analysis"
+              ?
+              "Moving to Reactor Analysis Chamber..."
+              :
+              nextStage === "council"
+              ?
+              "Connecting Council Intelligence..."
+              :
+              nextStage === "idea"
+              ?
+              "Opening Idea Chamber..."
+              :
+              "Initializing Reactor..."
+            }
+
+
+            onComplete={()=>{
+
+              setStage(nextStage);
+
+            }}
+
+          />
+
+        )}
+
+
+
+
+
+
+
+
+        {/* REACTOR */}
 
         {stage === "reactor" && (
 
@@ -155,48 +194,38 @@ export default function LabController() {
             className="
               min-h-screen
               flex
+              flex-col
               items-center
               justify-center
             "
 
           >
 
-            <div className="text-center">
-
-              <ReactorCore />
+            <Orbit stage="reactor" />
 
 
-              <motion.h1
-
-                animate={{
-                  opacity:[
-                    .3,
-                    1,
-                    .3
-                  ]
-                }}
-
-                transition={{
-                  duration:2,
-                  repeat:Infinity
-                }}
-
-                className="
-                  mt-8
-                  text-4xl
-                  text-cyan-400
-                  font-bold
-                  tracking-widest
-                "
-
-              >
-
-                REACTOR ONLINE
-
-              </motion.h1>
+            <ReactorCore />
 
 
-            </div>
+            <button
+
+              onClick={()=>moveTo("analysis")}
+
+              className="
+                mt-10
+                px-8
+                py-3
+                border
+                border-cyan-400
+                rounded-xl
+                text-cyan-300
+              "
+
+            >
+
+              START ANALYSIS ⚡
+
+            </button>
 
 
           </motion.div>
@@ -208,7 +237,10 @@ export default function LabController() {
 
 
 
-        {/* AI ANALYSIS */}
+
+
+
+        {/* REACTOR ANALYSIS */}
 
         {stage === "analysis" && (
 
@@ -226,7 +258,34 @@ export default function LabController() {
 
           >
 
+            <Orbit stage="analysis" />
+
+
             <ReactorSequence />
+
+
+            <button
+
+              onClick={()=>moveTo("council")}
+
+              className="
+                block
+                mx-auto
+                mt-8
+                px-8
+                py-3
+                border
+                border-purple-400
+                rounded-xl
+                text-purple-300
+              "
+
+            >
+
+              CONNECT COUNCIL 🧠
+
+            </button>
+
 
           </motion.div>
 
@@ -237,7 +296,10 @@ export default function LabController() {
 
 
 
-        {/* COUNCIL AWAKENING */}
+
+
+
+        {/* COUNCIL */}
 
         {stage === "council" && (
 
@@ -257,9 +319,34 @@ export default function LabController() {
 
           >
 
-            <Orbit />
+            <Orbit stage="council" />
+
 
             <Council />
+
+
+            <button
+
+              onClick={()=>moveTo("idea")}
+
+              className="
+                block
+                mx-auto
+                mt-8
+                px-8
+                py-3
+                border
+                border-green-400
+                rounded-xl
+                text-green-300
+              "
+
+            >
+
+              ENTER IDEA CHAMBER 🧬
+
+            </button>
+
 
           </motion.div>
 
@@ -269,19 +356,17 @@ export default function LabController() {
 
 
 
-{stage === "score" && (
 
-  <ScoreCard />
 
-)}
 
-        {/* MAIN LAB */}
 
-        {stage === "mission" && (
+        {/* IDEA CHAMBER */}
+
+        {stage === "idea" && (
 
           <motion.div
 
-            key="mission"
+            key="idea"
 
             initial={{
               opacity:0
@@ -291,33 +376,77 @@ export default function LabController() {
               opacity:1
             }}
 
-            transition={{
-              duration:1
-            }}
-
           >
 
-            <Labscene>
+            <Orbit stage="idea" />
 
 
-              <LabHUB />
+            <IdeaChamber />
 
 
-              <Orbit />
+            <button
 
+              onClick={()=>setStage("score")}
 
-              <IdeaChamber />
+              className="
+                block
+                mx-auto
+                mt-8
+                px-8
+                py-3
+                border
+                border-cyan-400
+                rounded-xl
+                text-cyan-300
+              "
 
+            >
 
-              <Council />
+              VIEW LAUNCH REPORT 🚀
 
-
-            </Labscene>
+            </button>
 
 
           </motion.div>
 
         )}
+
+
+
+
+
+
+
+
+
+        {/* SCORECARD */}
+
+        {stage === "score" && (
+
+          <motion.div
+
+            key="score"
+
+            initial={{
+              opacity:0
+            }}
+
+            animate={{
+              opacity:1
+            }}
+
+          >
+
+            <Orbit stage="score" />
+
+
+            <ScoreCard />
+
+
+          </motion.div>
+
+        )}
+
 
 
       </AnimatePresence>

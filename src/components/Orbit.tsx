@@ -2,7 +2,43 @@
 
 import { motion } from "framer-motion";
 
-export default function Orbit() {
+
+type OrbitProps = {
+  stage?: string;
+};
+
+
+const messages: Record<string,string> = {
+
+  boot:
+    "Welcome, Founder. LaunchLab systems are initializing.",
+
+  reactor:
+    "Reactor core online. Power systems are stable.",
+
+  analysis:
+    "Council intelligence models are analyzing your concept.",
+
+  council:
+    "Four strategic minds are connected. Evaluation underway.",
+
+  idea:
+    "Your idea has entered the chamber. Preparing analysis.",
+
+  score:
+    "Mission complete. Your launch pathway has been calculated.",
+
+  default:
+    "Standing by. Awaiting founder command."
+
+};
+
+
+
+export default function Orbit({
+  stage = "default"
+}: OrbitProps) {
+
 
   return (
 
@@ -10,7 +46,7 @@ export default function Orbit() {
 
       initial={{
         opacity:0,
-        y:30
+        y:-30
       }}
 
       animate={{
@@ -23,35 +59,40 @@ export default function Orbit() {
       }}
 
       className="
-        max-w-3xl
+        max-w-xl
         mx-auto
-        mt-10
-        p-8
+        p-6
         rounded-2xl
         border
         border-cyan-400/40
-        bg-black/70
+        bg-black/80
         shadow-[0_0_40px_rgba(0,255,255,.25)]
         text-center
       "
 
     >
 
+
       <motion.div
 
         animate={{
+
           rotate:360
+
         }}
 
         transition={{
-          duration:12,
+
+          duration:10,
+
           repeat:Infinity,
+
           ease:"linear"
+
         }}
 
         className="
-          text-6xl
-          mb-6
+          text-5xl
         "
 
       >
@@ -61,48 +102,38 @@ export default function Orbit() {
       </motion.div>
 
 
+
       <h2
+
         className="
-          text-3xl
-          font-bold
+          mt-4
           text-cyan-400
+          font-bold
           tracking-widest
+          text-xl
         "
+
       >
-        ORBIT ONLINE
+
+        ORBIT AI
+
       </h2>
 
 
+
       <p
+
         className="
-          mt-6
-          text-cyan-100
+          mt-4
+          text-gray-200
           text-lg
-          leading-relaxed
         "
+
       >
 
-        Welcome, Founder.
-        <br />
-        The LaunchLab Council has been activated.
-        <br />
-        Your mission is ready for analysis.
+        {messages[stage]}
 
       </p>
-
-
-      <div
-        className="
-          mt-8
-          text-green-400
-          font-bold
-          tracking-widest
-        "
-      >
-
-        🟢 COMMAND SYSTEM READY
-
-      </div>
 
 
     </motion.div>
