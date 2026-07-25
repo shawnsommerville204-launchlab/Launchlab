@@ -1,40 +1,58 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-
+import { AnimatePresence, motion } from "framer-motion";
+import Orbit from "./Orbit";
 import BootSequence from "./BootSequence";
-import Labscene from "./Labscene";
-import LabHUB from "./LabHUB";
 import ReactorCore from "./ReactorCore";
 import Council from "./Council";
+import IdeaChamber from "./IdeaChamber";
+import LabHUB from "./LabHUB";
+import Labscene from "./Labscene";
+
+
+type LabStage =
+  | "boot"
+  | "reactor"
+  | "council"
+  | "mission";
+
 
 export default function LabController() {
 
-  const [stage, setStage] = useState<
-    "boot" | "opening" | "lab"
-  >("boot");
+  const [stage, setStage] = useState<LabStage>("boot");
 
 
-  function enterLab() {
+  function startLaunchLab() {
 
-    setStage("opening");
+    setStage("reactor");
+
 
     setTimeout(() => {
-      setStage("lab");
-    }, 2500);
+      setStage("council");
+    }, 3500);
+
+
+    setTimeout(() => {
+      setStage("mission");
+    }, 7500);
 
   }
 
 
   return (
 
-    <main className="min-h-screen bg-black text-white overflow-hidden">
+    <main className="
+      min-h-screen
+      bg-black
+      text-white
+      overflow-hidden
+    ">
 
       <AnimatePresence mode="wait">
 
 
-        {/* BOOT CHAMBER */}
+        {/* BOOT */}
 
         {stage === "boot" && (
 
@@ -43,16 +61,12 @@ export default function LabController() {
             key="boot"
 
             initial={{
-              opacity: 1,
+              opacity:1
             }}
 
             exit={{
-              opacity: 0,
-              scale: 1.15,
-            }}
-
-            transition={{
-              duration: 1,
+              opacity:0,
+              scale:1.2
             }}
 
           >
@@ -62,14 +76,14 @@ export default function LabController() {
 
             <motion.button
 
-              onClick={enterLab}
+              onClick={startLaunchLab}
 
               whileHover={{
-                scale: 1.08,
+                scale:1.08
               }}
 
               whileTap={{
-                scale: 0.95,
+                scale:.95
               }}
 
               className="
@@ -82,15 +96,10 @@ export default function LabController() {
                 rounded-full
                 border
                 border-cyan-400
-                bg-black/80
-                text-cyan-400
+                text-cyan-300
                 font-bold
                 tracking-widest
-                shadow-[0_0_30px_rgba(6,182,212,.7)]
-                hover:bg-cyan-400
-                hover:text-black
-                transition-all
-                z-50
+                shadow-[0_0_35px_rgba(0,255,255,.7)]
               "
 
             >
@@ -106,24 +115,20 @@ export default function LabController() {
 
 
 
-        {/* ACCESS SEQUENCE */}
+        {/* REACTOR */}
 
-        {stage === "opening" && (
+        {stage === "reactor" && (
 
           <motion.div
 
-            key="opening"
+            key="reactor"
 
             initial={{
-              opacity: 0,
+              opacity:0
             }}
 
             animate={{
-              opacity: 1,
-            }}
-
-            exit={{
-              opacity: 0,
+              opacity:1
             }}
 
             className="
@@ -131,49 +136,42 @@ export default function LabController() {
               flex
               items-center
               justify-center
-              bg-black
             "
 
           >
 
-            <motion.div
+            <div className="text-center">
 
-              animate={{
-                scale:[
-                  1,
-                  1.05,
-                  1
-                ],
-              }}
-
-              transition={{
-                duration:1.5,
-                repeat:Infinity,
-              }}
-
-              className="text-center"
-
-            >
-
-              <h1 className="
-                text-5xl
-                font-bold
-                text-cyan-400
-              ">
-                ⚡ ACCESS GRANTED
-              </h1>
+              <ReactorCore />
 
 
-              <p className="
-                mt-6
-                text-cyan-200
-                text-xl
-              ">
-                Initializing LaunchLab OS...
-              </p>
+              <motion.h1
+
+                animate={{
+                  opacity:[0,1,0]
+                }}
+
+                transition={{
+                  duration:2,
+                  repeat:Infinity
+                }}
+
+                className="
+                  mt-8
+                  text-cyan-400
+                  text-3xl
+                  font-bold
+                  tracking-widest
+                "
+
+              >
+
+                REACTOR ONLINE
+
+              </motion.h1>
 
 
-            </motion.div>
+            </div>
 
 
           </motion.div>
@@ -182,25 +180,56 @@ export default function LabController() {
 
 
 
-        {/* MAIN LAB */}
 
-        {stage === "lab" && (
+        {/* COUNCIL */}
+
+        {stage === "council" && (
 
           <motion.div
 
-            key="lab"
+            key="council"
+
+            initial={{
+              opacity:0
+            }}
+
+            animate={{
+              opacity:1
+            }}
+
+          >
+
+            <Council />
+
+          </motion.div>
+
+        )}
+
+
+
+
+
+        {/* MISSION CONTROL */}
+
+        {stage === "mission" && (
+
+          <motion.div
+
+            key="mission"
 
             initial={{
               opacity:0,
+              y:40
             }}
 
             animate={{
               opacity:1,
+              y:0
             }}
 
-            transition={{
-              duration:1,
-            }}
+            className="
+              min-h-screen
+            "
 
           >
 
@@ -208,7 +237,9 @@ export default function LabController() {
 
               <LabHUB />
 
-              <ReactorCore />
+              <Orbit />
+
+              <IdeaChamber />
 
               <Council />
 
@@ -218,6 +249,7 @@ export default function LabController() {
           </motion.div>
 
         )}
+
 
 
       </AnimatePresence>

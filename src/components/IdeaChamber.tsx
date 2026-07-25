@@ -1,103 +1,216 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 
-type IdeaChamberProps = {
-  setIdeaData: (data: {
-    ideaName: string;
-    customer: string;
-    problem: string;
-  }) => void;
-};
 
-export default function IdeaChamber({
-  setIdeaData,
-}: IdeaChamberProps) {
+export default function IdeaChamber() {
 
-  const [ideaName, setIdeaName] = useState("");
-  const [customer, setCustomer] = useState("");
-  const [problem, setProblem] = useState("");
+  const [idea, setIdea] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+
+  function analyzeIdea() {
+
+    if (!idea.trim()) return;
+
+    setSubmitted(true);
+
+  }
+
 
   return (
-    <section className="px-6 py-20">
 
-      <div className="max-w-3xl mx-auto border border-cyan-500/30 rounded-3xl p-10 bg-zinc-900 shadow-2xl">
+    <motion.section
 
-        <h2 className="text-4xl font-bold text-center text-cyan-400">
-          🧪 IDEA CHAMBER
-        </h2>
+      initial={{
+        opacity:0,
+        y:40
+      }}
 
-        <p className="text-center text-zinc-400 mt-4">
-          Describe the future you are trying to build.
-        </p>
+      animate={{
+        opacity:1,
+        y:0
+      }}
+
+      transition={{
+        duration:1
+      }}
+
+      className="
+        max-w-4xl
+        mx-auto
+        mt-12
+        p-8
+        rounded-2xl
+        border
+        border-purple-400/40
+        bg-black/70
+        shadow-[0_0_40px_rgba(168,85,247,.25)]
+      "
+
+    >
+
+      <h2
+        className="
+          text-3xl
+          font-bold
+          text-purple-400
+          tracking-widest
+          text-center
+        "
+      >
+
+        🧬 IDEA CHAMBER
+
+      </h2>
 
 
-        <div className="mt-8 space-y-6">
+      <p
+        className="
+          mt-4
+          text-center
+          text-gray-300
+        "
+      >
 
-          <input
-            className="w-full rounded-xl bg-black border border-cyan-500/30 p-4 text-white"
-            placeholder="What is your idea called?"
-            value={ideaName}
-            onChange={(e) => {
-              const value = e.target.value;
+        Submit your concept. The Council will begin analysis.
 
-              setIdeaName(value);
-
-              setIdeaData({
-                ideaName: value,
-                customer,
-                problem,
-              });
-            }}
-          />
+      </p>
 
 
-          <input
-            className="w-full rounded-xl bg-black border border-cyan-500/30 p-4 text-white"
-            placeholder="Who needs this product?"
-            value={customer}
-            onChange={(e) => {
-              const value = e.target.value;
 
-              setCustomer(value);
+      {!submitted ? (
 
-              setIdeaData({
-                ideaName,
-                customer: value,
-                problem,
-              });
-            }}
-          />
-
+        <>
 
           <textarea
-            className="w-full h-40 rounded-xl bg-black border border-cyan-500/30 p-4 text-white"
-            placeholder="What problem does it solve?"
-            value={problem}
-            onChange={(e) => {
-              const value = e.target.value;
 
-              setProblem(value);
+            value={idea}
 
-              setIdeaData({
-                ideaName,
-                customer,
-                problem: value,
-              });
-            }}
+            onChange={(e)=>setIdea(e.target.value)}
+
+            placeholder="
+Describe your startup idea...
+Example:
+AI powered cleaning service platform
+            "
+
+            className="
+              mt-8
+              w-full
+              h-40
+              rounded-xl
+              bg-black
+              border
+              border-purple-400/40
+              p-5
+              text-white
+              outline-none
+              focus:border-purple-400
+            "
+
           />
 
 
-          <button
-            className="w-full py-4 rounded-xl bg-cyan-400 text-black font-bold hover:scale-105 transition"
+          <motion.button
+
+            onClick={analyzeIdea}
+
+            whileHover={{
+              scale:1.05
+            }}
+
+            className="
+              mt-6
+              w-full
+              py-4
+              rounded-xl
+              bg-purple-500/20
+              border
+              border-purple-400
+              text-purple-300
+              font-bold
+              tracking-widest
+            "
+
           >
-            ⚡ IGNITE REACTOR
-          </button>
 
-        </div>
+            ⚡ SEND TO COUNCIL
 
-      </div>
+          </motion.button>
 
-    </section>
+        </>
+
+
+      ) : (
+
+        <motion.div
+
+          initial={{
+            opacity:0
+          }}
+
+          animate={{
+            opacity:1
+          }}
+
+          className="
+            mt-8
+            text-center
+          "
+
+        >
+
+          <div
+            className="
+              text-5xl
+            "
+          >
+            ⚡
+          </div>
+
+
+          <h3
+            className="
+              mt-5
+              text-2xl
+              text-green-400
+              font-bold
+            "
+          >
+
+            REACTOR ANALYSIS STARTED
+
+          </h3>
+
+
+          <p
+            className="
+              mt-4
+              text-gray-300
+            "
+          >
+
+            The Council is evaluating:
+            <br/>
+            Market potential...
+            <br/>
+            Customer demand...
+            <br/>
+            Technical feasibility...
+            <br/>
+            Growth strategy...
+
+          </p>
+
+
+        </motion.div>
+
+      )}
+
+    </motion.section>
+
   );
+
 }
