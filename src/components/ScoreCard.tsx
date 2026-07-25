@@ -1,238 +1,217 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-
-const scores = [
-  {
-    icon: "🦈",
-    name: "VANTAGE",
-    score: 92,
-    category: "Market Strategy",
-  },
-  {
-    icon: "❤️",
-    name: "PULSE",
-    score: 88,
-    category: "Customer Fit",
-  },
-  {
-    icon: "⚙️",
-    name: "FORGE",
-    score: 91,
-    category: "Execution",
-  },
-  {
-    icon: "📈",
-    name: "ASCEND",
-    score: 89,
-    category: "Growth Potential",
-  },
-];
+import { launchScore, currentIdea } from "../data/LabState";
 
 
 export default function ScoreCard() {
 
-  const totalScore = Math.round(
-    scores.reduce((sum, item)=>sum + item.score,0)
-    / scores.length
-  );
+
+  const score = launchScore || 50;
+
+
+  let recommendation = "Needs More Analysis";
+
+
+  if(score >= 85){
+
+    recommendation = "🚀 BUILD MVP";
+
+  } 
+  else if(score >=70){
+
+    recommendation = "⚡ REFINE & TEST";
+
+  }
+  else {
+
+    recommendation = "🧪 RESEARCH FURTHER";
+
+  }
+
 
 
   return (
 
-    <motion.section
-
-      initial={{
-        opacity:0,
-        scale:.8
-      }}
-
-      animate={{
-        opacity:1,
-        scale:1
-      }}
-
-      transition={{
-        duration:1
-      }}
+    <main
 
       className="
         min-h-screen
-        flex
-        flex-col
-        items-center
-        justify-center
         bg-black
         text-white
+        flex
+        items-center
+        justify-center
         p-8
       "
 
     >
 
-      <h1
-        className="
-          text-4xl
-          text-cyan-400
-          font-bold
-          tracking-widest
-        "
-      >
-        COUNCIL VERDICT
-      </h1>
-
-
-
-      <div
-        className="
-          mt-10
-          grid
-          md:grid-cols-2
-          gap-6
-          max-w-4xl
-          w-full
-        "
-      >
-
-        {scores.map((member,index)=>(
-
-          <motion.div
-
-            key={member.name}
-
-            initial={{
-              opacity:0,
-              x:-30
-            }}
-
-            animate={{
-              opacity:1,
-              x:0
-            }}
-
-            transition={{
-              delay:index*.3
-            }}
-
-            className="
-              p-6
-              rounded-xl
-              border
-              border-cyan-400/30
-              bg-black/70
-              shadow-[0_0_25px_rgba(0,255,255,.2)]
-            "
-
-          >
-
-            <div className="text-3xl">
-              {member.icon}
-            </div>
-
-
-            <h2
-              className="
-                mt-3
-                text-xl
-                text-cyan-300
-                font-bold
-              "
-            >
-              {member.name}
-            </h2>
-
-
-            <p className="text-gray-400">
-              {member.category}
-            </p>
-
-
-            <div
-              className="
-                mt-4
-                text-3xl
-                font-bold
-                text-green-400
-              "
-            >
-              {member.score}%
-            </div>
-
-
-          </motion.div>
-
-        ))}
-
-      </div>
-
-
-
-
-      <motion.div
+      <motion.section
 
         initial={{
           opacity:0,
-          y:50
+          scale:.8
         }}
 
         animate={{
           opacity:1,
-          y:0
+          scale:1
         }}
 
         transition={{
-          delay:1.5
+          duration:1
         }}
 
         className="
-          mt-12
+          max-w-3xl
+          w-full
+          rounded-3xl
+          border
+          border-cyan-400/40
+          bg-black/80
+          p-10
           text-center
+          shadow-[0_0_60px_rgba(0,255,255,.25)]
         "
 
       >
 
-        <p
+
+        <div className="text-6xl">
+          🏆
+        </div>
+
+
+        <h1
+
           className="
-            text-gray-400
+            mt-6
+            text-4xl
+            text-cyan-400
+            font-bold
             tracking-widest
           "
+
         >
-          FINAL LAUNCH SCORE
+
+          LAUNCH REPORT
+
+        </h1>
+
+
+
+        <p className="
+          mt-8
+          text-gray-400
+        ">
+
+          FOUNDER CONCEPT
+
         </p>
 
 
         <div
+
           className="
-            text-7xl
-            font-bold
-            text-cyan-400
-            mt-4
+            mt-3
+            text-xl
+            text-white
           "
+
         >
 
-          {totalScore}
+          {currentIdea || "No idea submitted"}
 
         </div>
 
 
-        <p
+
+
+        <div
+
           className="
-            mt-6
+            mt-10
+            text-8xl
             text-green-400
-            text-xl
             font-bold
           "
+
         >
 
-          🚀 PROTOTYPE RECOMMENDED
+          {score}
+
+        </div>
+
+
+        <p className="
+          text-cyan-300
+          tracking-widest
+        ">
+
+          /100 LAUNCH POTENTIAL
 
         </p>
 
 
-      </motion.div>
 
 
-    </motion.section>
+        <motion.div
+
+          initial={{
+            opacity:0,
+            y:30
+          }}
+
+          animate={{
+            opacity:1,
+            y:0
+          }}
+
+          transition={{
+            delay:1
+          }}
+
+          className="
+            mt-10
+            border
+            border-green-400/40
+            rounded-xl
+            p-6
+          "
+
+        >
+
+          <h2 className="
+            text-2xl
+            text-green-400
+            font-bold
+          ">
+
+            COUNCIL RECOMMENDATION
+
+          </h2>
+
+
+          <p className="
+            mt-4
+            text-xl
+          ">
+
+            {recommendation}
+
+          </p>
+
+
+        </motion.div>
+
+
+
+
+      </motion.section>
+
+
+    </main>
 
   );
 

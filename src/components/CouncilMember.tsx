@@ -2,14 +2,16 @@
 
 import { motion } from "framer-motion";
 
-interface CouncilMemberProps {
+
+type CouncilMemberProps = {
   icon: string;
   title: string;
   role: string;
   name: string;
   mission: string;
-  active?: boolean;
-}
+  active: boolean;
+};
+
 
 export default function CouncilMember({
   icon,
@@ -17,139 +19,167 @@ export default function CouncilMember({
   role,
   name,
   mission,
-  active = false,
+  active,
 }: CouncilMemberProps) {
 
+
   return (
+
     <motion.div
 
       initial={{
-        opacity: 0,
-        scale: 0.8,
-        y: 40,
+        opacity:0,
+        scale:.8
       }}
 
       animate={{
-        opacity: active ? 1 : 0.35,
-
-        scale: active ? 1 : 0.95,
-
-        y: 0,
-
-        boxShadow: active
-          ? "0 0 45px rgba(6,182,212,0.7)"
-          : "0 0 15px rgba(6,182,212,0.15)",
+        opacity: active ? 1 : .35,
+        scale: active ? 1 : .95
       }}
 
       transition={{
-        duration: 0.8,
+        duration:.8
       }}
 
-      whileHover={{
-        scale: 1.05,
-      }}
-
-      className="
+      className={`
         relative
-        overflow-hidden
+        p-8
         rounded-2xl
         border
-        border-cyan-400/30
+        ${
+          active
+          ?
+          "border-cyan-400 shadow-[0_0_35px_rgba(0,255,255,.35)]"
+          :
+          "border-gray-700"
+        }
         bg-black/70
-        backdrop-blur
-        p-8
-      "
+      `}
+
     >
 
-      {/* Status Glow */}
       {active && (
-        <div
+
+        <motion.div
+
+          animate={{
+            opacity:[0.3,1,0.3]
+          }}
+
+          transition={{
+            duration:2,
+            repeat:Infinity
+          }}
+
           className="
             absolute
             inset-0
-            bg-cyan-400/10
-            animate-pulse
+            rounded-2xl
+            border
+            border-cyan-400
+            pointer-events-none
           "
+
         />
+
       )}
 
 
-      <div className="relative z-10">
 
-        <div className="text-5xl">
+      <div className="
+        relative
+        z-10
+      ">
+
+
+        <div className="
+          text-5xl
+        ">
+
           {icon}
+
         </div>
 
 
-        <h2
-          className="
-            mt-5
-            text-2xl
-            font-bold
-            text-cyan-400
-            tracking-widest
-          "
-        >
-          {title}
+        <h2 className="
+          mt-5
+          text-2xl
+          font-bold
+          text-cyan-300
+        ">
+
+          {name}
+
         </h2>
 
 
-        <p
-          className="
-            mt-2
-            text-cyan-200
-            text-sm
-          "
-        >
+        <p className="
+          text-sm
+          uppercase
+          tracking-widest
+          text-gray-400
+        ">
+
           {role}
+
         </p>
 
 
-        <h3
-          className="
-            mt-3
-            text-white
-            text-lg
-          "
-        >
-          {name}
-        </h3>
 
+        <div className="
+          mt-5
+          flex
+          items-center
+          gap-2
+        ">
 
-        <p
-          className="
-            mt-5
-            text-gray-400
-            leading-relaxed
-          "
-        >
-          {mission}
-        </p>
+          <span
+            className={`
+              h-3
+              w-3
+              rounded-full
+              ${
+                active
+                ?
+                "bg-green-400"
+                :
+                "bg-gray-600"
+              }
+            `}
+          />
 
-
-        <div
-          className={`
-            mt-6
+          <span className="
             text-sm
-            font-bold
-            tracking-widest
-            ${
-              active
-              ? "text-green-400"
-              : "text-gray-500"
-            }
-          `}
-        >
+            text-green-300
+          ">
 
-          {active
-            ? "🟢 ONLINE"
-            : "⚪ STANDBY"}
+            {active
+              ? "ONLINE"
+              : "STANDBY"
+            }
+
+          </span>
 
         </div>
+
+
+
+        <p className="
+          mt-5
+          text-gray-300
+          leading-relaxed
+        ">
+
+          {mission}
+
+        </p>
 
 
       </div>
 
+
     </motion.div>
+
   );
+
 }

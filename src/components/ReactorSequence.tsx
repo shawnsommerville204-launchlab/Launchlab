@@ -2,28 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { calculateScore } from "../data/LabState";
 
 
-const councilScan = [
+const scans = [
   {
     icon: "🦈",
     name: "VANTAGE",
-    task: "Analyzing market opportunity..."
+    message: "Analyzing market opportunity..."
   },
   {
     icon: "❤️",
     name: "PULSE",
-    task: "Mapping customer demand..."
+    message: "Mapping customer demand..."
   },
   {
     icon: "⚙️",
     name: "FORGE",
-    task: "Testing execution strategy..."
+    message: "Testing execution strategy..."
   },
   {
     icon: "📈",
     name: "ASCEND",
-    task: "Calculating growth potential..."
+    message: "Calculating growth potential..."
   }
 ];
 
@@ -32,105 +33,139 @@ export default function ReactorSequence() {
 
   const [progress, setProgress] = useState(0);
   const [activeScan, setActiveScan] = useState(0);
+  const [score, setScore] = useState(0);
 
 
   useEffect(() => {
 
-    const timer = setInterval(() => {
+
+    const progressTimer = setInterval(() => {
+
 
       setProgress((current) => {
 
-        if(current >= 100){
-          clearInterval(timer);
+
+        if (current >= 100) {
+
+          clearInterval(progressTimer);
+
           return 100;
+
         }
+
 
         return current + 2;
 
       });
 
-    },100);
+
+    }, 100);
 
 
-    const scanner = setInterval(() => {
 
-      setActiveScan((current)=>{
+    const scanTimer = setInterval(() => {
 
-        if(current >= councilScan.length - 1){
-          clearInterval(scanner);
+
+      setActiveScan((current) => {
+
+
+        if (current >= scans.length - 1) {
+
+          clearInterval(scanTimer);
+
           return current;
+
         }
+
 
         return current + 1;
 
       });
 
-    },2500);
+
+    }, 2500);
+
 
 
     return () => {
-      clearInterval(timer);
-      clearInterval(scanner);
+
+      clearInterval(progressTimer);
+
+      clearInterval(scanTimer);
+
     };
 
 
-  },[]);
+  }, []);
+
+
+
+
+  useEffect(() => {
+
+    if (progress === 100) {
+
+      const finalScore = calculateScore();
+
+      setScore(finalScore);
+
+    }
+
+  }, [progress]);
+
 
 
 
   return (
 
-    <motion.section
-
-      initial={{
-        opacity:0,
-        scale:.8
-      }}
-
-      animate={{
-        opacity:1,
-        scale:1
-      }}
+    <section
 
       className="
         min-h-screen
+        bg-black
+        text-white
         flex
         flex-col
         items-center
         justify-center
-        bg-black
-        text-white
         p-8
       "
 
     >
 
 
+      {/* Reactor Core */}
+
       <motion.div
 
         animate={{
-          boxShadow:[
+
+          boxShadow: [
             "0 0 20px cyan",
-            "0 0 80px cyan",
+            "0 0 90px cyan",
             "0 0 20px cyan"
           ]
+
         }}
 
         transition={{
+
           duration:2,
+
           repeat:Infinity
+
         }}
 
         className="
-          w-48
-          h-48
+          w-52
+          h-52
           rounded-full
           border-4
           border-cyan-400
           flex
           items-center
           justify-center
-          text-6xl
+          text-7xl
         "
 
       >
@@ -141,14 +176,17 @@ export default function ReactorSequence() {
 
 
 
+
       <h1
+
         className="
           mt-10
           text-4xl
-          font-bold
           text-cyan-400
+          font-bold
           tracking-widest
         "
+
       >
 
         REACTOR ANALYSIS
@@ -157,39 +195,37 @@ export default function ReactorSequence() {
 
 
 
-      <p className="
-        mt-4
-        text-gray-300
-      ">
+      <p className="text-gray-400 mt-3">
 
-        LaunchLab Council is evaluating your idea
+        LaunchLab Council intelligence active
 
       </p>
 
 
 
 
-      <div
-        className="
-          mt-10
-          w-full
-          max-w-xl
-        "
-      >
+      {/* Progress Bar */}
+
+      <div className="mt-10 w-full max-w-xl">
+
 
         <div
+
           className="
-            h-4
+            h-5
             bg-gray-800
             rounded-full
             overflow-hidden
           "
+
         >
 
           <motion.div
 
             animate={{
+
               width:`${progress}%`
+
             }}
 
             className="
@@ -202,12 +238,16 @@ export default function ReactorSequence() {
         </div>
 
 
-        <div className="
-          mt-3
-          text-center
-          text-cyan-300
-          font-bold
-        ">
+        <div
+
+          className="
+            text-center
+            mt-3
+            text-cyan-300
+            font-bold
+          "
+
+        >
 
           {progress}% COMPLETE
 
@@ -219,57 +259,68 @@ export default function ReactorSequence() {
 
 
 
-      <div className="mt-10 space-y-5">
+
+      {/* Council Scans */}
+
+      <div className="mt-10 space-y-6">
 
 
-        {councilScan.map((member,index)=>(
+        {scans.map((scan,index)=>(
+
 
           <motion.div
 
-            key={member.name}
-
-            initial={{
-              opacity:0,
-              x:-40
-            }}
+            key={scan.name}
 
             animate={{
+
               opacity:index <= activeScan ? 1 : .25,
-              x:0
+
+              x:index <= activeScan ? 0 : -20
+
             }}
 
             className="
               flex
               items-center
-              gap-4
-              text-lg
+              gap-5
             "
 
           >
 
-            <span>
-              {member.icon}
-            </span>
+            <div className="text-4xl">
+
+              {scan.icon}
+
+            </div>
+
 
             <div>
 
-              <div className="
-                text-cyan-300
-                font-bold
-              ">
 
-                {member.name}
+              <h2
 
-              </div>
+                className="
+                  text-cyan-300
+                  font-bold
+                  tracking-widest
+                "
 
-              <div className="
-                text-sm
-                text-gray-400
-              ">
+              >
 
-                {member.task}
+                {scan.name}
 
-              </div>
+                {index <= activeScan && " ONLINE"}
+
+              </h2>
+
+
+              <p className="text-gray-400">
+
+                {scan.message}
+
+              </p>
+
 
             </div>
 
@@ -284,30 +335,77 @@ export default function ReactorSequence() {
 
 
 
-      {progress === 100 && (
+
+
+      {/* Score Reveal */}
+
+      {progress === 100 && score > 0 && (
 
         <motion.div
 
           initial={{
+
             opacity:0,
-            y:30
+
+            scale:.5
+
           }}
 
           animate={{
+
             opacity:1,
-            y:0
+
+            scale:1
+
           }}
 
           className="
             mt-12
-            text-3xl
-            text-green-400
-            font-bold
+            text-center
           "
 
         >
 
-          🚀 LAUNCH SCORE READY
+          <h2
+
+            className="
+              text-green-400
+              text-3xl
+              font-bold
+              tracking-widest
+            "
+
+          >
+
+            🚀 LAUNCH SCORE READY
+
+          </h2>
+
+
+
+          <div
+
+            className="
+              text-8xl
+              text-cyan-400
+              font-bold
+              mt-5
+            "
+
+          >
+
+            {score}
+
+          </div>
+
+
+
+          <p className="text-gray-400 mt-4">
+
+            Council recommendation generated
+
+          </p>
+
 
         </motion.div>
 
@@ -315,7 +413,7 @@ export default function ReactorSequence() {
 
 
 
-    </motion.section>
+    </section>
 
   );
 

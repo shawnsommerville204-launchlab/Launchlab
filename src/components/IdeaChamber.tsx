@@ -1,215 +1,424 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+
+import BootSequence from "./BootSequence";
+import ReactorCore from "./ReactorCore";
+import ReactorSequence from "./ReactorSequence";
+import Council from "./Council";
+import Orbit from "./Orbit";
+import IdeaChamber from "./IdeaChamber";
+import ScoreCard from "./ScoreCard";
+import LabHUB from "./LabHUB";
+import Labscene from "./Labscene";
 
 
-export default function IdeaChamber() {
+type LabStage =
+  | "boot"
+  | "reactor"
+  | "analysis"
+  | "council"
+  | "idea"
+  | "score"
+  | "mission";
 
-  const [idea, setIdea] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+
+export default function LabController() {
 
 
-  function analyzeIdea() {
+  const [stage, setStage] = useState<LabStage>("boot");
 
-    if (!idea.trim()) return;
 
-    setSubmitted(true);
+
+  function startLaunchLab() {
+
+
+    setStage("reactor");
+
+
+    setTimeout(() => {
+
+      setStage("analysis");
+
+    }, 3500);
+
+
+
+    setTimeout(() => {
+
+      setStage("council");
+
+    }, 9000);
+
+
+
+    setTimeout(() => {
+
+      setStage("idea");
+
+    }, 12500);
+
 
   }
 
 
+
+  function showScore(){
+
+    setStage("score");
+
+  }
+
+
+
   return (
 
-    <motion.section
-
-      initial={{
-        opacity:0,
-        y:40
-      }}
-
-      animate={{
-        opacity:1,
-        y:0
-      }}
-
-      transition={{
-        duration:1
-      }}
-
+    <main
       className="
-        max-w-4xl
-        mx-auto
-        mt-12
-        p-8
-        rounded-2xl
-        border
-        border-purple-400/40
-        bg-black/70
-        shadow-[0_0_40px_rgba(168,85,247,.25)]
+        min-h-screen
+        bg-black
+        text-white
+        overflow-hidden
       "
-
     >
 
-      <h2
-        className="
-          text-3xl
-          font-bold
-          text-purple-400
-          tracking-widest
-          text-center
-        "
-      >
 
-        🧬 IDEA CHAMBER
-
-      </h2>
-
-
-      <p
-        className="
-          mt-4
-          text-center
-          text-gray-300
-        "
-      >
-
-        Submit your concept. The Council will begin analysis.
-
-      </p>
+      <AnimatePresence mode="wait">
 
 
 
-      {!submitted ? (
+        {/* BOOT */}
 
-        <>
+        {stage === "boot" && (
 
-          <textarea
+          <motion.div
 
-            value={idea}
+            key="boot"
 
-            onChange={(e)=>setIdea(e.target.value)}
+            initial={{
+              opacity:1
+            }}
 
-            placeholder="
-Describe your startup idea...
-Example:
-AI powered cleaning service platform
-            "
+            exit={{
+              opacity:0,
+              scale:1.2
+            }}
 
-            className="
-              mt-8
-              w-full
-              h-40
-              rounded-xl
-              bg-black
-              border
-              border-purple-400/40
-              p-5
-              text-white
-              outline-none
-              focus:border-purple-400
-            "
+          >
 
-          />
+            <BootSequence />
 
 
-          <motion.button
+            <motion.button
 
-            onClick={analyzeIdea}
+              onClick={startLaunchLab}
 
-            whileHover={{
-              scale:1.05
+              whileHover={{
+                scale:1.08
+              }}
+
+              whileTap={{
+                scale:.95
+              }}
+
+              className="
+                fixed
+                bottom-10
+                left-1/2
+                -translate-x-1/2
+                px-10
+                py-4
+                rounded-full
+                border
+                border-cyan-400
+                text-cyan-300
+                font-bold
+                tracking-widest
+                bg-black
+                shadow-[0_0_40px_rgba(0,255,255,.7)]
+              "
+
+            >
+
+              ENTER LAUNCHLAB ⚡
+
+            </motion.button>
+
+
+          </motion.div>
+
+        )}
+
+
+
+
+
+
+        {/* REACTOR */}
+
+        {stage === "reactor" && (
+
+          <motion.div
+
+            key="reactor"
+
+            initial={{
+              opacity:0
+            }}
+
+            animate={{
+              opacity:1
             }}
 
             className="
-              mt-6
-              w-full
-              py-4
-              rounded-xl
-              bg-purple-500/20
-              border
-              border-purple-400
-              text-purple-300
-              font-bold
-              tracking-widest
+              min-h-screen
+              flex
+              items-center
+              justify-center
             "
 
           >
 
-            ⚡ SEND TO COUNCIL
-
-          </motion.button>
-
-        </>
+            <div className="text-center">
 
 
-      ) : (
-
-        <motion.div
-
-          initial={{
-            opacity:0
-          }}
-
-          animate={{
-            opacity:1
-          }}
-
-          className="
-            mt-8
-            text-center
-          "
-
-        >
-
-          <div
-            className="
-              text-5xl
-            "
-          >
-            ⚡
-          </div>
+              <ReactorCore />
 
 
-          <h3
-            className="
-              mt-5
-              text-2xl
-              text-green-400
-              font-bold
-            "
-          >
+              <h1
+                className="
+                  mt-8
+                  text-4xl
+                  text-cyan-400
+                  font-bold
+                  tracking-widest
+                "
+              >
 
-            REACTOR ANALYSIS STARTED
+                REACTOR ONLINE
 
-          </h3>
+              </h1>
 
 
-          <p
-            className="
-              mt-4
-              text-gray-300
-            "
+              <Orbit />
+
+            </div>
+
+
+          </motion.div>
+
+        )}
+
+
+
+
+
+
+        {/* ANALYSIS */}
+
+        {stage === "analysis" && (
+
+          <motion.div
+
+            key="analysis"
+
+            initial={{
+              opacity:0
+            }}
+
+            animate={{
+              opacity:1
+            }}
+
           >
 
-            The Council is evaluating:
-            <br/>
-            Market potential...
-            <br/>
-            Customer demand...
-            <br/>
-            Technical feasibility...
-            <br/>
-            Growth strategy...
-
-          </p>
+            <ReactorSequence />
 
 
-        </motion.div>
+          </motion.div>
 
-      )}
+        )}
 
-    </motion.section>
+
+
+
+
+
+
+        {/* COUNCIL */}
+
+        {stage === "council" && (
+
+          <motion.div
+
+            key="council"
+
+            initial={{
+              opacity:0,
+              y:40
+            }}
+
+            animate={{
+              opacity:1,
+              y:0
+            }}
+
+          >
+
+            <Orbit />
+
+
+            <Council />
+
+
+          </motion.div>
+
+        )}
+
+
+
+
+
+
+
+        {/* IDEA CHAMBER */}
+
+        {stage === "idea" && (
+
+          <motion.div
+
+            key="idea"
+
+            initial={{
+              opacity:0,
+              y:40
+            }}
+
+            animate={{
+              opacity:1,
+              y:0
+            }}
+
+          >
+
+            <Orbit />
+
+
+            <IdeaChamber />
+
+
+            <button
+
+              onClick={showScore}
+
+              className="
+                block
+                mx-auto
+                mt-8
+                px-8
+                py-3
+                rounded-xl
+                border
+                border-green-400
+                text-green-300
+                font-bold
+              "
+
+            >
+
+              VIEW COUNCIL VERDICT 🚀
+
+            </button>
+
+
+          </motion.div>
+
+        )}
+
+
+
+
+
+
+
+        {/* SCORE */}
+
+        {stage === "score" && (
+
+          <motion.div
+
+            key="score"
+
+            initial={{
+              opacity:0
+            }}
+
+            animate={{
+              opacity:1
+            }}
+
+          >
+
+            <ScoreCard />
+
+
+          </motion.div>
+
+        )}
+
+
+
+
+
+
+
+        {/* MISSION LAB */}
+
+        {stage === "mission" && (
+
+          <motion.div
+
+            key="mission"
+
+            initial={{
+              opacity:0
+            }}
+
+            animate={{
+              opacity:1
+            }}
+
+          >
+
+            <Labscene>
+
+
+              <LabHUB />
+
+
+              <Orbit />
+
+
+              <Council />
+
+
+              <IdeaChamber />
+
+
+            </Labscene>
+
+
+          </motion.div>
+
+        )}
+
+
+
+      </AnimatePresence>
+
+
+    </main>
 
   );
 
